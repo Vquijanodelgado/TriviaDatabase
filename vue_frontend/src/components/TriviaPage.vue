@@ -70,7 +70,7 @@
       } else {
         await this.endAttempt();
         alert("You've completed the trivia! Great job!");
-        this.$router.push("/"); // Redirect to home page for now
+        //this.$router.push("/"); // Redirect to home page for now as a placeholder
       }
     },
     async endAttempt() {
@@ -80,6 +80,14 @@
           attempt_date_time: this.attemptDateTime,
         });
         console.log("Attempt ended:", response.data);
+        this.$router.push({
+            path: "/results",
+            query: {
+                email: this.email,
+                attempt_date_time: this.attemptDateTime,
+            },
+
+        });
       } catch (error) {
         console.error("Error ending attempt:", error);
       }

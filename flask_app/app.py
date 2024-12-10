@@ -244,6 +244,36 @@ def end_attempt():
     finally:
         conn.close()
 
+@app.route('/attempt/results', methods=['GET'])
+def get_attempt_results():
+    email = request.args.get('email')
+    attempt_date_time = request.args.get('attempt_date_time')
+
+    if not email or not attempt_date_time:
+        return jsonify({"error": "Email and attempt_date_time are required"}), 400
+
+    conn = connect_db()
+    if conn is None:
+        return jsonify({"error": "Database connection failed"}), 500
+
+    cursor = conn.cursor()
+    try:
+        # Fetch total_score and duration for the given attempt
+        cursor.execute(
+            'SELECT total_score, duration FROM attempts WHERE email = %s AND attempt_date_time = %s',
+            (email, attempt_date_time)
+        )
+        result = cursor.fetchone()
+
+        if result is None:
+            return jsonify({"error": "Attempt not found"}), 404
+
+        total_score, duration = result
+        return jsonify({"total_score": total_score, "duration": duration}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
 
 
 if __name__ == '__main__':
