@@ -1,29 +1,25 @@
 <template>
-  <div class="app">
+  <div id="app" class="app">
     <!-- Header -->
     <header class="header">
       <h1>Trivia Jungle</h1>
     </header>
 
-    <!-- Main  stuff -->
+    <!-- Main Content -->
     <main class="main-content">
-      <UserAuth />
+      <router-view />
     </main>
 
     <!-- Footer -->
     <footer class="footer">
-      <p>&copy; 2024 Trivia Jungle. heheh All Rights Reserved.</p>
+      <p>&copy; 2024 Trivia Jungle. All Rights Reserved.</p>
     </footer>
   </div>
 </template>
 
 <script>
-import UserAuth from "./components/UserAuth.vue";
-
 export default {
-  components: {
-    UserAuth,
-  },
+  name: "App",
 };
 </script>
 
@@ -32,14 +28,13 @@ export default {
 body {
   margin: 0;
   font-family: 'Arial', sans-serif;
-  background-color: #f7f9fc; /* Light background similar to Duolingo */
+  background-color: #f7f9fc; /* Light background */
   color: #333;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-/* App Container */
 .app {
   display: flex;
   flex-direction: column;
@@ -49,7 +44,7 @@ body {
 
 /* Header */
 .header {
-  background-color: #58cc02; /* Duolingo's signature green */
+  background-color: #58cc02; /* Trivia Jungle green */
   color: white;
   padding: 20px 0;
   text-align: center;
@@ -61,15 +56,12 @@ body {
 /* Main Content */
 .main-content {
   flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center; 
   padding: 20px;
 }
 
-/* Footer */  
+/* Footer */
 .footer {
-  background-color: #eeeeee; /* Light gray for subtle footer */
+  background-color: #eeeeee;
   text-align: center;
   padding: 10px 0;
   font-size: 14px;
@@ -77,4 +69,3 @@ body {
   box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1);
 }
 </style>
-

@@ -70,6 +70,7 @@
           );
           alert(response.data.message);
           this.showRegisterModal = false; // Close modal on success
+          this.$router.push({ path: "/trivia", query: { email: this.registerData.email } });
         } catch (error) {
           const errorMessage = error.response
             ? error.response.data.error
@@ -85,6 +86,7 @@
           );
           alert(response.data.message);
           this.showLoginModal = false; // Close modal on success
+          this.$router.push({ path: "/trivia", query: { email: this.loginData.email } });
         } catch (error) {
           const errorMessage = error.response
             ? error.response.data.error

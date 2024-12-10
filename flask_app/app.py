@@ -1,7 +1,9 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 import psycopg
+import random
 
 # Credentials Information
 hostname = 'localhost'
@@ -99,6 +101,149 @@ def login_user():
         return jsonify({"error": str(e)}), 500
     finally:
         conn.close()
+
+@app.route('/trivia/questions', methods=['GET'])
+def get_random_trivia_questions():
+    conn = connect_db()
+    if conn is None:
+        return jsonify({"error": "failed connecting to database"}), 500
+
+    cursor = conn.cursor()
+    try:
+        cursor.execute('SELECT question_text FROM questions;')
+        all_questions = cursor.fetchall()
+        conn.close()
+
+        # gets 10 random questions
+        random_questions = random.sample(all_questions, min(10, len(all_questions)))
+        result = [{"question": q[0]} for q in random_questions]
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/attempt/start', methods=['POST']) #makes a new attempt
+def start_attempt():
+    data = request.get_json()
+    email = data.get('email')
+
+    if not email:
+        return jsonify({"error": "Email is required"}), 400
+
+    attempt_date_time = datetime.now()
+    start_time = attempt_date_time.time()
+    placeholder_end_time = attempt_date_time.time()  # Placeholder end time bc database says NOT NULL
+
+    conn = connect_db()
+    if conn is None:
+        return jsonify({"error": "Database connection failed"}), 500
+
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            'INSERT INTO attempts (email, attempt_date_time, start_time, end_time, total_score, duration) '
+            'VALUES (%s, %s, %s, %s, %s, %s)',
+            (email, attempt_date_time, start_time, placeholder_end_time, 0, 0)
+        )
+        conn.commit()
+        return jsonify({"message": "Attempt started", "attempt_date_time": attempt_date_time.isoformat()}), 201
+    except Exception as e:
+        conn.rollback()
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
+# records user's answers from an attempt
+@app.route('/attempt/answer', methods=['POST'])
+def record_answer():
+    data = request.get_json()
+    email = data.get('email')
+    attempt_date_time = data.get('attempt_date_time')
+    question_text = data.get('question_text')
+    user_answer = data.get('user_answer')
+
+    if not email or not attempt_date_time or not question_text or user_answer is None:
+        return jsonify({"error": "All fields are required"}), 400
+
+    conn = connect_db()
+    if conn is None:
+        return jsonify({"error": "Database connection failed"}), 500
+
+    cursor = conn.cursor()
+    try:
+        # Checks correct answer
+        cursor.execute(
+            'SELECT correct_answer FROM questions WHERE question_text = %s',
+            (question_text,)
+        )
+        correct_answer = cursor.fetchone()
+        if correct_answer is None:
+            return jsonify({"error": "Question not found"}), 404
+
+        #curson fetches a tuple, uses first element (boolean value)
+        is_correct = correct_answer[0] == user_answer #comparison of user's input with the correct answer
+        #bool(user_answer)
+
+        # Insert the user's answer
+        cursor.execute(
+            'INSERT INTO attempt_answers (email, attempt_date_time, question_text, user_answer, is_correct) '
+            'VALUES (%s, %s, %s, %s, %s)',
+            (email, attempt_date_time, question_text, user_answer, is_correct)
+        )
+        conn.commit()
+        return jsonify({"message": "Answer recorded", "is_correct": is_correct}), 201
+    except Exception as e:
+        conn.rollback()
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
+# unfinished attributes get filled, like duration
+@app.route('/attempt/end', methods=['POST'])
+def end_attempt():
+    data = request.get_json()
+    email = data.get('email')
+    attempt_date_time = data.get('attempt_date_time')
+
+    if not email or not attempt_date_time:
+        return jsonify({"error": "Email and attempt_date_time are required"}), 400
+
+    end_time = datetime.now().time()
+
+    conn = connect_db()
+    if conn is None:
+        return jsonify({"error": "Database connection failed"}), 500
+
+    cursor = conn.cursor()
+    try:
+        # Calculate total score
+        cursor.execute(
+            'SELECT COUNT(*) FROM attempt_answers WHERE email = %s AND attempt_date_time = %s AND is_correct = TRUE',
+            (email, attempt_date_time)
+        )
+        total_score = cursor.fetchone()[0]
+
+        # Calculate duration
+        cursor.execute(
+            'SELECT start_time FROM attempts WHERE email = %s AND attempt_date_time = %s',
+            (email, attempt_date_time)
+        )
+        start_time = cursor.fetchone()[0]
+        duration = (datetime.combine(datetime.today(), end_time) - datetime.combine(datetime.today(), start_time)).seconds
+
+        # Update the attempt
+        cursor.execute(
+            'UPDATE attempts SET end_time = %s, total_score = %s, duration = %s '
+            'WHERE email = %s AND attempt_date_time = %s',
+            (end_time, total_score, duration, email, attempt_date_time)
+        )
+        conn.commit()
+        return jsonify({"message": "Attempt ended", "total_score": total_score, "duration": duration}), 200
+    except Exception as e:
+        conn.rollback()
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
 
 
 if __name__ == '__main__':
