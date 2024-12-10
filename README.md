@@ -6,8 +6,9 @@ Fun trivia questions website built using **Vue.js** for the front end and **Flas
 - User registration, login, hash
 - Trivia questions fetched from PostgreSQL database title 'trivia_database'
 
+--- 
 
-## ** for Project setup**
+## **for Project setup**
 ### **1. Prerequisites**
 
 installed:
@@ -16,8 +17,6 @@ installed:
 - Python ->(https://www.python.org/) 
 - PostgreSQL -> (https://www.postgresql.org/) 
 
----
-
 ### **2. Back-end Setup (Flask)**
 1. navigate to the 'flask_app' directory:
    ```bash
@@ -25,7 +24,7 @@ installed:
 2. create a virtual environment (optional)
    ```bash
    python -m venv venv
-   for windows: source venv/bin/activate
+   for windows it is: source venv/bin/activate
 3. installed:
    ```bash
    pip install flask flask-cors psycopg werkzeug
@@ -37,6 +36,7 @@ installed:
     pwd = 'your_password'
     port_id = 5432
 5. PostgreSQL database set up:
+   ```bash
     create tables using pgAdmin or psql:
     CREATE TABLE users (
         email VARCHAR(255) PRIMARY KEY,
@@ -57,8 +57,3 @@ installed:
 The app will run on http://localhost:8080
 
 --- 
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
