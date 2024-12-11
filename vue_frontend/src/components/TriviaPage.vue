@@ -36,6 +36,7 @@
           email: this.email,
         });
         this.attemptDateTime = response.data.attempt_date_time;
+        console.log(response.data.attempt_date_time);
       } catch (error) {
         console.error("Error starting attempt:", error);
       }
@@ -44,6 +45,7 @@
       try {
         const response = await axios.get("http://127.0.0.1:5000/trivia/questions");
         this.questions = response.data;
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching questions:", error);
       }
@@ -56,7 +58,7 @@
           question_text: question,
           user_answer: answer,
         });
-        console.log("Answer recorded:", response.data);
+        console.log(response);
       } catch (error) {
         console.error("Error recording answer:", error);
       }
@@ -69,7 +71,7 @@
         this.currentQuestionIndex++;
       } else {
         await this.endAttempt();
-        alert("You've completed the trivia! Great job!");
+        //alert("You've completed the trivia! Great job!");
         //this.$router.push("/"); // Redirect to home page for now as a placeholder
       }
     },
@@ -79,7 +81,7 @@
           email: this.email,
           attempt_date_time: this.attemptDateTime,
         });
-        console.log("Attempt ended:", response.data);
+        console.log(response);
         this.$router.push({
             path: "/results",
             query: {

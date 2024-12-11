@@ -33,7 +33,7 @@
           });
           this.results = response.data;
         } catch (error) {
-          console.error("Error fetching results:", error);
+          console.error("could not fetch results:", error);
         }
       },
     },

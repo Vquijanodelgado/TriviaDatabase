@@ -68,14 +68,16 @@
             "http://127.0.0.1:5000/user/register",
             this.registerData
           );
-          alert(response.data.message);
+          console.log(response.data.message);
+          //alert(response.data.message);
           this.showRegisterModal = false; // Close modal on success
           this.$router.push({ path: "/trivia", query: { email: this.registerData.email } });
         } catch (error) {
           const errorMessage = error.response
             ? error.response.data.error
             : "Unable to connect to server";
-          alert(errorMessage || "Registration failed");
+          //alert(errorMessage || "Registration failed");
+          console.log(errorMessage);
         }
       },
       async loginUser() {
@@ -84,14 +86,16 @@
             "http://127.0.0.1:5000/user/login",
             this.loginData
           );
-          alert(response.data.message);
+          //alert(response.data.message);
+          console.log(response.data.message);
           this.showLoginModal = false; // Close modal on success
           this.$router.push({ path: "/trivia", query: { email: this.loginData.email } });
         } catch (error) {
           const errorMessage = error.response
             ? error.response.data.error
             : "Unable to connect to server";
-          alert(errorMessage || "Login failed");
+          //alert(errorMessage || "Login failed");
+          console.log(errorMessage);
         }
       },
     },
