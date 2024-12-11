@@ -2,7 +2,7 @@
   <div id="app" class="app">
     <!-- Header -->
     <header class="header">
-      <h1>Trivia Jungle</h1>
+      <h1>Trivia Practice</h1>
     </header>
 
     <!-- Main Content -->
@@ -12,7 +12,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-      <p>&copy; 2024 Trivia Jungle. All Rights Reserved.</p>
+      <p> 2024 Trivia Practice. version 0.0.1</p>
     </footer>
   </div>
 </template>

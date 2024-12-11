@@ -8,13 +8,22 @@
     <div v-else>
       <p>Loading results...</p>
     </div>
+    <!-- redirect to beginning of trivia to play again -->
+    <div class="trivia-again-container">
+      <button class="trivia-again-btn" @click="navigateToDifficulty">
+        Practice Trivia Again?
+      </button>
+    </div>
+    <div class="divider"></div>
 
-    <!-- Pie Chart Section -->
+    <!-- pie Chart Section -->
     <div v-if="categoryData.length > 0" class="chart-container">
-      <h3>Your Strength by Category</h3>
-      <h4>Updates after each attempt! </h4>
+      <h2>Trivia Stats</h2>
+      <h4>from all attempts</h4>
       <canvas id="categoryPieChart"></canvas>
     </div>
+
+
   </div>
 </template>
 
@@ -105,6 +114,12 @@ export default {
         },
       });
     },
+    navigateToDifficulty() {
+      this.$router.push({
+        path: "/select-difficulty",
+        query: { email: this.email },
+      });
+    },
   },
   async mounted() {
     await this.fetchResults();
@@ -119,9 +134,8 @@ export default {
   font-family: 'Arial', sans-serif;
   padding: 20px;
   color: #ffffff;
-  background-color: #2d4028; /* with dark green background */
+  background-color: #2d4028;
   border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
   max-width: 800px;
   margin: 40px auto;
 }
@@ -132,12 +146,11 @@ export default {
 }
 
 .results-container {
-  background-color: #354c31; /* card's background color */
+  background-color: #354c31; 
   padding: 20px;
   border-radius: 10px;
   margin: 20px auto;
   max-width: 600px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 .results-container p {
@@ -154,5 +167,33 @@ export default {
 canvas {
   max-width: 100% !important; 
   height: auto !important; 
+}
+
+.divider {
+  margin: 20px 0;
+  border-top: 2px solid #ffffff;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.trivia-again-container {
+  margin-top: 20px;
+}
+
+.trivia-again-btn {
+  background-color: #78b47a;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.trivia-again-btn:hover {
+  background-color: #45a847;
 }
 </style>
