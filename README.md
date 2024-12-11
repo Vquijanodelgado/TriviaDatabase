@@ -1,7 +1,9 @@
 # Trivia Website and Database
 
 Fun trivia questions website built using **Vue.js** for the front end and **Flask** for the backend, with a Postgresql database.
-
+---
+main python3 code -> flask_app\app.py
+--- 
 ## Features
 - User registration, login, hash
 - Trivia questions fetched from PostgreSQL database title 'trivia_database'
