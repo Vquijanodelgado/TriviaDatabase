@@ -24,6 +24,7 @@
   data() {
     return {
       email: this.$route.query.email || "user@example.com",
+      difficultyLevel: this.$route.query.difficulty_level || "easy", // for now, default to 'easy'      
       questions: [],
       currentQuestionIndex: 0,
       attemptDateTime: null,
@@ -43,7 +44,10 @@
     },
     async fetchQuestions() {
       try {
-        const response = await axios.get("http://127.0.0.1:5000/trivia/questions");
+        const response = await axios.get(
+          `http://127.0.0.1:5000/trivia/questions`,
+          { params: { difficulty_level: this.difficultyLevel } }
+        );
         this.questions = response.data;
         console.log(response.data);
       } catch (error) {

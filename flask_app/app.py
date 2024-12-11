@@ -103,23 +103,45 @@ def login_user():
         conn.close()
 
 @app.route('/trivia/questions', methods=['GET'])
-def get_random_trivia_questions():
+def get_questions_by_difficulty():
+    difficulty_level = request.args.get('difficulty_level', default="easy")
     conn = connect_db()
     if conn is None:
-        return jsonify({"error": "failed connecting to database"}), 500
+        return jsonify({"error": "Database connection failed"}), 500
 
     cursor = conn.cursor()
     try:
-        cursor.execute('SELECT question_text FROM questions;')
-        all_questions = cursor.fetchall()
-        conn.close()
-
-        # gets 10 random questions
-        random_questions = random.sample(all_questions, min(10, len(all_questions)))
+        cursor.execute(
+            'SELECT question_text FROM questions WHERE difficulty_level = %s;',
+            (difficulty_level,)
+        )
+        questions = cursor.fetchall()
+        random_questions = random.sample(questions, min(10, len(questions)))
         result = [{"question": q[0]} for q in random_questions]
         return jsonify(result), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
+# @app.route('/trivia/questions', methods=['GET'])
+# def get_random_trivia_questions():
+#     conn = connect_db()
+#     if conn is None:
+#         return jsonify({"error": "failed connecting to database"}), 500
+
+#     cursor = conn.cursor()
+#     try:
+#         cursor.execute('SELECT question_text FROM questions;')
+#         all_questions = cursor.fetchall()
+#         conn.close()
+
+#         # gets 10 random questions
+#         random_questions = random.sample(all_questions, min(10, len(all_questions)))
+#         result = [{"question": q[0]} for q in random_questions]
+#         return jsonify(result), 200
+#     except Exception as e:
+#         return jsonify({"error": str(e)}), 500
 
 @app.route('/attempt/start', methods=['POST']) #makes a new attempt
 def start_attempt():
@@ -274,6 +296,24 @@ def get_attempt_results():
         return jsonify({"error": str(e)}), 500
     finally:
         conn.close()
+
+@app.route('/difficulties', methods=['GET'])
+def get_difficulties():
+    conn = connect_db()
+    if conn is None:
+        return jsonify({"error": "Database connection failed"}), 500
+
+    cursor = conn.cursor()
+    try:
+        cursor.execute('SELECT difficulty_level, description FROM difficulty_levels;')
+        difficulties = cursor.fetchall()
+        result = [{"difficulty_level": d[0], "description": d[1]} for d in difficulties]
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
 
 
 if __name__ == '__main__':

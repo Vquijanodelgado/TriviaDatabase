@@ -71,7 +71,11 @@
           console.log(response.data.message);
           //alert(response.data.message);
           this.showRegisterModal = false; // Close modal on success
-          this.$router.push({ path: "/trivia", query: { email: this.registerData.email } });
+          this.$router.push({ 
+            path: "/select-difficulty", 
+            query: { email: this.registerData.email } 
+          });
+          //this.$router.push({ path: "/trivia", query: { email: this.registerData.email } });
         } catch (error) {
           const errorMessage = error.response
             ? error.response.data.error
@@ -89,7 +93,11 @@
           //alert(response.data.message);
           console.log(response.data.message);
           this.showLoginModal = false; // Close modal on success
-          this.$router.push({ path: "/trivia", query: { email: this.loginData.email } });
+          this.$router.push({ 
+            path: "/select-difficulty", 
+            query: { email: this.loginData.email } 
+          });
+          //this.$router.push({ path: "/trivia", query: { email: this.loginData.email } });
         } catch (error) {
           const errorMessage = error.response
             ? error.response.data.error
