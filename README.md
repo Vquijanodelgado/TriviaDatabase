@@ -1,14 +1,15 @@
 # Trivia Website and Database
 
 Fun trivia questions website built using **Vue.js** for the front end and **Flask** for the backend, with a Postgresql database.
----
-main python3 code -> flask_app\app.py
---- 
+
 ## Features
-- User registration, login, hash
-- Trivia questions fetched from PostgreSQL database title 'trivia_database'
-- Select Difficulty Level feature, constraints dataset questions
+- main python3 code:
+   - flask_app\app.py
+- User registration, login, hash, saved to database
+- Trivia questions fetched from PostgreSQL database titled 'trivia_database'
+- Select difficulty level feature, constraints dataset questions
 - dynamic results page, displays user's total percentage by category of questions
+- user's score(s) saved to database
 
 --- 
 
@@ -17,11 +18,11 @@ main python3 code -> flask_app\app.py
 
 installed:
 
-- Node.js -> (https://nodejs.org/) (for vue.js frontend)
-- Python ->(https://www.python.org/) 
-- PostgreSQL -> (https://www.postgresql.org/) 
+- Node.js -> https://nodejs.org/ (for vue.js frontend)
+- Python -> https://www.python.org/ 
+- PostgreSQL -> https://www.postgresql.org/
 
-### **2. Back-end Setup (Flask)**
+### **2. Flask Back-end Setup**
 1. navigate to the 'flask_app' directory:
    ```bash
    cd flask_app
@@ -51,7 +52,7 @@ installed:
 6. run flask server: python app.py, which will run on http://127.0.0.1:5000
 
 
-### **3. Front-end Setup (Vue.js)**
+### **3. Vue.js Front-end Setup**
 
 1. navigate to the `vue_frontend` directory:
    ```bash
