@@ -314,6 +314,52 @@ def get_difficulties():
     finally:
         conn.close()
 
+# for the dynamic pie chart results
+@app.route('/user/category_strength', methods=['GET'])
+def get_category_strength():
+    email = request.args.get('email')
+    if not email:
+        return jsonify({"error": "Email is required"}), 400
+    conn = connect_db()
+    if conn is None:
+        return jsonify({"error": "Database connection failed"}), 500
+
+    cursor = conn.cursor()
+    try:
+        # query that calculates the percentage of correct answers per category by counting the is_correct's as 1's
+        query = '''
+        SELECT c.category_name, c.description, 
+               COUNT(CASE WHEN aa.is_correct = TRUE THEN 1 END) AS correct_count,
+               COUNT(*) AS total_count,
+               ROUND(COUNT(CASE WHEN aa.is_correct = TRUE THEN 1 END)::DECIMAL / COUNT(*) * 100, 2) AS correct_percentage
+        FROM attempt_answers aa
+        JOIN questions q ON aa.question_text = q.question_text
+        JOIN categories c ON q.category_name = c.category_name
+        WHERE aa.email = %s
+        GROUP BY c.category_name, c.description
+        ORDER BY correct_percentage DESC;
+        '''
+        cursor.execute(query, (email,))
+        results = cursor.fetchall()
+
+        # Convert query results into JSON format
+        data = [
+            {
+                "category_name": row[0],
+                "description": row[1],
+                "correct_count": row[2],
+                "total_count": row[3],
+                "correct_percentage": float(row[4]),
+            }
+            for row in results #loops through categories if more than one
+        ]
+
+        return jsonify(data), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
 
 
 if __name__ == '__main__':

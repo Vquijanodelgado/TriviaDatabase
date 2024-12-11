@@ -5,6 +5,8 @@ Fun trivia questions website built using **Vue.js** for the front end and **Flas
 ## Features
 - User registration, login, hash
 - Trivia questions fetched from PostgreSQL database title 'trivia_database'
+- Select Difficulty Level feature, constraints dataset questions
+- dynamic results page, displays user's total percentage by category of questions
 
 --- 
 
