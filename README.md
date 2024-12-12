@@ -1,12 +1,13 @@
 # Trivia Website and Database
 
 Fun trivia questions website built using **Vue.js** for the front end and **Flask** for the backend, with a Postgresql database.
+Database pulls from open Trivia Quiz Questions csv file on Kaggle : https://www.kaggle.com/datasets/shreyasur965/open-trivia-database-quiz-questions-all-categories/data
 
 ## Features
 - main python3 code:
    - flask_app\app.py
 - User registration, login, hash, saved to database
-- Trivia questions fetched from PostgreSQL database titled 'trivia_database'
+- Trivia questions fetched from PostgreSQL database titled 'trivia_database' which pulls from outside T
 - Select difficulty level feature, constraints dataset questions
 - dynamic results page, displays user's total percentage by category of questions
 - user's score(s) saved to database
@@ -42,7 +43,7 @@ installed:
     port_id = 5432
 5. PostgreSQL database set up:
    ```bash
-    create tables using pgAdmin or psql:
+    create tables schema using pgAdmin or psql:
     CREATE TABLE users (
         email VARCHAR(255) PRIMARY KEY,
         username VARCHAR(255) NOT NULL,
